@@ -42,4 +42,8 @@ public class SingleResponse<T> extends Response {
         return response;
     }
 
+    public static void main(String[] args) {
+        Response1 response1 = new Response1();
+    }
+
 }

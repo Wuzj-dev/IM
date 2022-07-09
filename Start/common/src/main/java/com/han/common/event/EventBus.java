@@ -22,20 +22,16 @@ import java.util.stream.Collectors;
  */
 @Component
 public class EventBus implements EventBusI {
-
     ExecutorService defaultExecutor;
-
     @Autowired
     EventHub eventHub;
-
     BlockingQueue<Runnable> blockingQueue = new LinkedBlockingQueue<>(1000);
 
-
-    public BlockingQueue getBlockingQueue(){
+    public BlockingQueue getBlockingQueue() {
         return blockingQueue;
     }
 
-    public EventBus(){
+    public EventBus() {
         this.defaultExecutor = new ThreadPoolExecutor(ThreadUtils.getSuitableThreadCount(),
                 ThreadUtils.getSuitableThreadCount(),
                 0L, TimeUnit.MILLISECONDS,
@@ -49,7 +45,7 @@ public class EventBus implements EventBusI {
 
         try {
             Optional<EventHandlerI> optionalEventHandlerI = this.eventHub.findEventHandlerList(event.getClass()).stream().findFirst();
-            if (optionalEventHandlerI.isPresent()){
+            if (optionalEventHandlerI.isPresent()) {
                 response = optionalEventHandlerI.get().execute(event);
             }
         } catch (Exception var5) {
@@ -81,13 +77,9 @@ public class EventBus implements EventBusI {
 
             try {
                 if (null != p.getExecutor()) {
-                    p.getExecutor().submit(() -> {
-                        return p.execute(event);
-                    });
+                    p.getExecutor().submit(() -> p.execute(event));
                 } else {
-                    this.defaultExecutor.submit(() -> {
-                        return p.execute(event);
-                    });
+                    this.defaultExecutor.submit(() -> p.execute(event));
                 }
             } catch (Exception var5) {
                 response = this.handleException(p, response, var5);
@@ -97,19 +89,18 @@ public class EventBus implements EventBusI {
         }).collect(Collectors.toList());
     }
 
+    private Response handleException(EventHandlerI handler, Response response, Exception exception) {
 
-    private Response handleException(EventHandlerI handler, Response response, Exception exception){
-
-        Class responseClz = (Class)this.eventHub.getResponseRepository(handler.getClass());
+        Class responseClz = (Class) this.eventHub.getResponseRepository(handler.getClass());
 
         try {
-            response = (Response)responseClz.newInstance();
+            response = (Response) responseClz.newInstance();
         } catch (Exception var6) {
             throw new DefEventException(var6.getMessage());
         }
 
         if (exception instanceof BaseException) {
-            ErrorCodeI errCode = ((BaseException)exception).getErrCode();
+            ErrorCodeI errCode = ((BaseException) exception).getErrCode();
             response.setErrCode(errCode.getErrCode());
         } else {
             response.setErrCode(BasicErrorCode.SYS_ERROR.getErrCode());
