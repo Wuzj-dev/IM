@@ -15,23 +15,40 @@
  */
 package com.han.common.utils;
 
-import org.apache.commons.lang3.time.FastDateFormat;
+import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
-import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Time util
  *
  * @author Nacos
  */
+@NoArgsConstructor
 public class TimeUtils {
-
-    public static Timestamp getCurrentTime() {
-        return new Timestamp(System.currentTimeMillis());
+    /**
+     * 获取当前时间
+     *  输出结果：2015-06-25 09:13:43.561
+     * @return the Timestamp
+     */
+    public static Timestamp curTimestampCur(){
+        return new java.sql.Timestamp(System.currentTimeMillis());
     }
 
-     public static String getCurrentTimeStr() {
-
+    public static Date toDate(Timestamp timestamp){
+        if (timestamp == null){
+            return null;
+        }
+        return new Date(timestamp.getTime());
     }
+
+    public static Timestamp toTimestamp(Date date){
+        if (date == null){
+            return null;
+        }
+        return new Timestamp(date.getTime());
+    }
+
+
 }
