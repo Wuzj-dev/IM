@@ -12,19 +12,19 @@ public interface EventI {
      *  获取 执行器
      * @return
      */
-    Executor getExecutor();
+    Executor executor();
 
     /**
      * 获取事件Id
      * @return Int
      */
-    Integer getEventId();
+    Long eventId();
 
     /**
      * 获取事件元数据
      * @return the Map
      */
-    Map getmData();
+    Map<String, Object> metaData();
  
 
 
