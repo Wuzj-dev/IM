@@ -15,15 +15,16 @@
     <description>Start</description>
     <packaging>pom</packaging>
 
-
     <properties>
         <java.version>11</java.version>
         <GSON.version>2.2.4</GSON.version>
         <MVC.version>2.1.1.RELEASE</MVC.version>
+        <common.version>0.0.1-SNAPSHOT</common.version>
     </properties>
 
     <modules>
         <module>common</module>
+        <module>login</module>
     </modules>
 
     <dependencies>
@@ -36,6 +37,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.han.common</groupId>
+            <artifactId>common</artifactId>
+            <version>${common.version}</version>
         </dependency>
 
 <!--        GSON工具类-->

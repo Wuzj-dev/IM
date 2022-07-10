@@ -12,7 +12,6 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>common</name>
 	<description>常用</description>
-	<packaging>jar</packaging>
 	<properties>
 		<java.version>11</java.version>
 	</properties>
