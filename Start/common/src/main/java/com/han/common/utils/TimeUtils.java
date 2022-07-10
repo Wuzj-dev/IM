@@ -18,6 +18,7 @@ package com.han.common.utils;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -29,25 +30,35 @@ import java.util.Date;
 public class TimeUtils {
     /**
      * 获取当前时间
-     *  输出结果：2015-06-25 09:13:43.561
+     * 格式类型：2015-06-25 09:13:43.561
+     *
      * @return the Timestamp
      */
-    public static Timestamp curTimestampCur(){
+    public static Timestamp curTimestampCur() {
         return new java.sql.Timestamp(System.currentTimeMillis());
     }
 
-    public static Date toDate(Timestamp timestamp){
-        if (timestamp == null){
+    public static Date toDate(Timestamp timestamp) {
+        if (timestamp == null) {
             return null;
         }
         return new Date(timestamp.getTime());
     }
 
-    public static Timestamp toTimestamp(Date date){
-        if (date == null){
+    public static Timestamp toTimestamp(Date date) {
+        if (date == null) {
             return null;
         }
         return new Timestamp(date.getTime());
+    }
+
+    /**
+     * 获取当前时间
+     *
+     * @return the LocalDateTime
+     */
+    public static LocalDateTime curLocalDateTime() {
+        return LocalDateTime.now();
     }
 
 

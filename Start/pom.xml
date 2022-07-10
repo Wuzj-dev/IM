@@ -17,7 +17,7 @@
 
     <properties>
         <java.version>11</java.version>
-        <GSON.version>2.2.4</GSON.version>
+        <GSON.version>2.6.2</GSON.version>
         <MVC.version>2.1.1.RELEASE</MVC.version>
         <common.version>0.0.1-SNAPSHOT</common.version>
     </properties>

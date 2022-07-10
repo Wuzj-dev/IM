@@ -38,10 +38,10 @@ public class EventHub {
 
     public List<EventHandlerI> findEventHandlerList(Class<? extends AbstractDefaultEvent> abstractDefaultEvent) {
         List<EventHandlerI> eventHandlerIList = getEventRepository().get(abstractDefaultEvent);
-        return eventHandlerIList == null ?Collections.emptyList() : eventHandlerIList;
+        return eventHandlerIList == null ? new LinkedList<>() : eventHandlerIList;
     }
 
-    public Class<?> getResponseRepository(Class<?> c){
+    public Class<?> getResponseRepository(Class<?> c) {
         return responseRepository.get(c);
     }
 
