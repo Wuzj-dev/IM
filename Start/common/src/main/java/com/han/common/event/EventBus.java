@@ -5,7 +5,9 @@ import com.han.common.exception.BaseException;
 import com.han.common.exception.BasicErrorCode;
 import com.han.common.exception.DefEventException;
 import com.han.common.exception.ErrorCodeI;
+import com.han.common.policy.RejectionHandle;
 import com.han.common.utils.ThreadUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -21,13 +23,26 @@ import java.util.stream.Collectors;
  * @Date 2022/7/9 16:05
  */
 @Component
+@Slf4j
 public class EventBus implements EventBusI {
     ExecutorService defaultExecutor;
     @Autowired
     EventHub eventHub;
-    BlockingQueue<Runnable> blockingQueue = new LinkedBlockingQueue<>(1000);
+
+    RejectionHandle rejectionHandle = new RejectionHandle() {
+        @Override
+        public void reject(Runnable task, Object o) {
+            try {
+                task.run();
+            } catch (Exception e) {
+                log.info("任务处理失败， 异常");
+            }
+        }
+    };
+    BlockingQueue<Runnable> blockingQueue = new DefBlockingQueue<>(1000);
 
     public BlockingQueue getBlockingQueue() {
+
         return blockingQueue;
     }
 
@@ -108,5 +123,21 @@ public class EventBus implements EventBusI {
 
         response.setErrMessage(exception.getMessage());
         return response;
+    }
+
+
+    class DefBlockingQueue<E> extends LinkedBlockingQueue<E> {
+
+        public DefBlockingQueue(int capacity) {
+            super(capacity);
+        }
+
+        @Override
+        public boolean add(E o) {
+            if (!super.add(o)) {
+                rejectionHandle.reject(() -> fireAll((AbstractDefaultEvent) o), null);
+            }
+            return true;
+        }
     }
 }
