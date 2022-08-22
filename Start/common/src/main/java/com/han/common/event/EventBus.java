@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.util.Optional;
 import java.util.Queue;
 import java.util.concurrent.*;
@@ -26,9 +27,15 @@ import java.util.stream.Collectors;
 @Slf4j
 public class EventBus implements EventBusI {
     ExecutorService defaultExecutor;
-    @Autowired
+    @Resource
     EventHub eventHub;
 
+    @Autowired
+    BlockingQueue<Runnable> blockingQueue;
+
+    /**
+     * 拒绝策略
+     */
     RejectionHandle rejectionHandle = new RejectionHandle() {
         @Override
         public void reject(Runnable task, Object o) {
@@ -39,13 +46,17 @@ public class EventBus implements EventBusI {
             }
         }
     };
-    BlockingQueue<Runnable> blockingQueue = new DefBlockingQueue<>(1000);
 
     public BlockingQueue getBlockingQueue() {
-
+        if (blockingQueue == null) {
+            blockingQueue = new DefBlockingQueue<>(1000);
+        }
         return blockingQueue;
     }
 
+    /**
+     * 设置默认线程池
+     */
     public EventBus() {
         this.defaultExecutor = new ThreadPoolExecutor(ThreadUtils.getSuitableThreadCount(),
                 ThreadUtils.getSuitableThreadCount(),
@@ -59,7 +70,8 @@ public class EventBus implements EventBusI {
         EventHandlerI eventHandlerI = null;
 
         try {
-            Optional<EventHandlerI> optionalEventHandlerI = this.eventHub.findEventHandlerList(event.getClass()).stream().findFirst();
+            Optional<EventHandlerI> optionalEventHandlerI
+                    = this.eventHub.findEventHandlerList(event.getClass()).stream().findFirst();
             if (optionalEventHandlerI.isPresent()) {
                 response = optionalEventHandlerI.get().execute(event);
             }
@@ -99,14 +111,13 @@ public class EventBus implements EventBusI {
             } catch (Exception var5) {
                 response = this.handleException(p, response, var5);
             }
-
             return response;
         }).collect(Collectors.toList());
     }
 
     private Response handleException(EventHandlerI handler, Response response, Exception exception) {
 
-        Class responseClz = (Class) this.eventHub.getResponseRepository(handler.getClass());
+        Class responseClz = this.eventHub.getResponseRepository(handler.getClass());
 
         try {
             response = (Response) responseClz.newInstance();
