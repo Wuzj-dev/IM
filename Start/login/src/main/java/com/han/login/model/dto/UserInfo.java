@@ -1,6 +1,7 @@
 package com.han.login.model.dto;
 
 import com.han.common.enums.OperateEnum;
+import com.han.common.model.user.OperaPermissions;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -14,7 +15,6 @@ import java.util.Map;
  * @Author wuj
  * @Date 2022/7/10 10:12
  */
-
 public class UserInfo {
 
     /**
@@ -30,7 +30,8 @@ public class UserInfo {
     /**
      * 操作权限
      */
-     private Map<OperateEnum, List<String>> operate;
+     private Map<OperateEnum, List<OperaPermissions>> operate;
+
 
 
     @Getter
@@ -49,7 +50,6 @@ public class UserInfo {
 
     }
 
-
     /**
      * 登陆在线设备
      */
@@ -63,8 +63,14 @@ public class UserInfo {
         PC("PC","电脑设备"),
         OTHER("OTHER","其它");
 
+        /**
+         * 设备类型
+         */
         private String deviceType;
 
+        /**
+         * 设备描述
+         */
         private String deviceDesc;
     }
 
@@ -77,9 +83,14 @@ public class UserInfo {
         MAC("MAC","MAC"),
         WINDOWS("WINDOWS","WINDOWS");
 
-
+        /**
+         * 系统类型
+         */
         private String osType;
 
+        /**
+         * 描述
+         */
         private String osDesc;
 
     }

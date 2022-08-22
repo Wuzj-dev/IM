@@ -25,6 +25,10 @@
     <modules>
         <module>common</module>
         <module>login</module>
+
+        <module>model/CommonModel</module>
+
+        <module>infrastructure/userinfrastructrue</module>
     </modules>
 
     <dependencies>
@@ -62,16 +66,29 @@
             <artifactId>springfox-swagger2</artifactId>
             <version>2.9.2</version>
         </dependency>
+
+<!--        通用模块-->
+        <dependency>
+            <groupId>com.han.common.model</groupId>
+            <artifactId>CommonModel</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <dependencyManagement>
         <dependencies>
-
 <!--            MVC -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-web</artifactId>
                 <version>${MVC.version}</version>
+            </dependency>
+
+            <!--            基础设施user-->
+            <dependency>
+                <groupId>com.han.userinfrastructrue</groupId>
+                <artifactId>userinfrastructrue</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
