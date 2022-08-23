@@ -16,13 +16,13 @@ public enum OperateEnum {
     /**
      * DELETE
      */
-    DELETE("d"),
+    DELETE("D"),
 
-    CHANGE("c"),
+    CHANGE("C"),
 
-    ADD("a"),
+    ADD("A"),
 
-    SELECT("s");
+    SELECT("S");
 
 
     private String operateType;

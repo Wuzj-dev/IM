@@ -22,6 +22,8 @@ public class UserInfo {
      */
     private String userId;
 
+    private boolean isDisable;
+
     /**
      * 当前在线登陆登陆
      */
